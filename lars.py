@@ -18,17 +18,25 @@ def input():
     return xs, ys
 
 def lars(xs, ys):
-    P = len(xs[0])
+    P = len(xs)
     N = len(ys)
+    print P, N
 
 # Normal        
     print xs
+    print ys
+    print ""
     meanXs = np.mean(xs, axis=0)
-    normXs = np.linalg.norm(xs, axis=0) 
-    regularXs = np.divide(np.subtract(xs, meanXs), normXs)
+    varXs = np.var(xs, axis=0)
+    print meanXs
+    print varXs
+    print ""
+    regularXs = np.divide(np.subtract(xs, meanXs), np.sqrt(P*varXs))
+    print regularXs
+    print ""
     print np.mean(regularXs, axis=0)
     print np.linalg.norm(regularXs, axis=0)
 
-xs, ys = input()
-lars(xs, ys)
-
+#xs, ys = input()
+#lars(xs, ys)
+lars([[1,2,3],[4,5,6]], [1,1,1])
