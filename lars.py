@@ -35,14 +35,12 @@ def lars(xs, ys):
     regularYs = np.asmatrix(np.divide(np.subtract(ys, meanYs), np.sqrt(N*varYs)))
 #    print np.mean(regularYs, axis=0)
 #    print alg.norm(regularYs, axis=0)
-    print regularXs
-    print regularYs
     print regularYs.shape
     AFullSet = set(range(0,P)) 
     ASet = set([]) 
     AcSet = set(range(0,P))
     UaHat = np.asmatrix([[0] for i in range(N)])
-
+    Beta = [None for i in range(P)]
     for step in range(0,P):
         corr = np.transpose(regularXs)*(regularYs-UaHat)
         absCorr = np.absolute(corr)
@@ -81,6 +79,8 @@ def lars(xs, ys):
                 GamaHat = val[0,0]
                 minj = j
         UaHat = UaHat+GamaHat*Ua
+        (Beta[step],_,_,_) = alg.lstsq(regularXs,UaHat)
+        print Beta[step]
      
 xs, ys = input()
 lars(xs, ys)
