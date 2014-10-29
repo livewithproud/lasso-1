@@ -1,5 +1,6 @@
 import numpy as np
 import numpy.linalg as alg
+#import matplotlib
 
 def input():
     rawdata = []
@@ -42,6 +43,7 @@ def lars(xs, ys):
     UaHat = np.asmatrix([[0] for i in range(N)])
     Beta = [None for i in range(P)]
     Xa = np.asmatrix([]).reshape(N,0)
+    sign = [None for i in range(P)]
     for step in range(0,P):
         corr = np.transpose(regularXs)*(regularYs-UaHat)
         absCorr = np.absolute(corr)
@@ -56,14 +58,15 @@ def lars(xs, ys):
 #        (maxCorrIdx,_) = np.unravel_index(absCorr.argmax(), absCorr.shape) 
         ASet.add(maxCorrIdx)
         print "add", maxCorrIdx +1
-        sj = 1
+        sign[maxCorrIdx] = 1
         if corr[maxCorrIdx] < 0:
-            sj = -1
-        Xa = np.append(Xa, sj*regularXs[:,maxCorrIdx], axis=1)
+            sign[maxCorrIdx] = -1
+        Xa = np.append(Xa, sign[maxCorrIdx]*regularXs[:,maxCorrIdx], axis=1)
         XaTXaInv = alg.inv(np.transpose(Xa)*Xa)
         (_,p) = Xa.shape
         Ia = np.matrix([[1] for i in range(p)])
         Aa = np.power(np.transpose(Ia)*XaTXaInv*Ia, -0.5)[0,0]
+        OmigaA = XaTXaInv*Aa*Ia
         Ua = Xa*XaTXaInv*Aa*Ia
         AcSet = AFullSet - ASet
         a = np.transpose(regularXs)*Ua
@@ -81,7 +84,13 @@ def lars(xs, ys):
         UaHat = UaHat+GamaHat*Ua
         (Beta[step],_,_,_) = alg.lstsq(regularXs,UaHat)
         print Beta[step]
-        print regularXs[0]*Beta[step], regularYs[0]
+        print regularXs[10]*Beta[step], regularYs[10], regularXs[10]
+    sigmaSqu = np.power(alg.norm(regularYs-regularXs*Beta[P-1]), 2)
+    print sigmaSqu
+    Cp = [None for i in range(P)]
+    for i in range(P):
+        Cp[i] = (N-i-1)*np.power(alg.norm(regularYs-regularXs*Beta[i]),2)/sigmaSqu-N+2.0*i
+    print Cp
      
 xs, ys = input()
 lars(xs, ys)
