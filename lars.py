@@ -32,7 +32,7 @@ def lars(xs, ys):
     print regularXs.shape
     meanYs = np.mean(ys)
     varYs = np.var(ys)
-    regularYs = np.asmatrix(np.divide(np.subtract(ys, meanYs), np.sqrt(N*varYs)))
+    regularYs = np.asmatrix(np.divide(np.subtract(ys, meanYs),1))#np.sqrt(N*varYs)))
 #    print np.mean(regularYs, axis=0)
 #    print alg.norm(regularYs, axis=0)
     print regularYs.shape
@@ -41,6 +41,7 @@ def lars(xs, ys):
     AcSet = set(range(0,P))
     UaHat = np.asmatrix([[0] for i in range(N)])
     Beta = [None for i in range(P)]
+    Xa = np.asmatrix([]).reshape(N,0)
     for step in range(0,P):
         corr = np.transpose(regularXs)*(regularYs-UaHat)
         absCorr = np.absolute(corr)
@@ -58,12 +59,11 @@ def lars(xs, ys):
         sj = 1
         if corr[maxCorrIdx] < 0:
             sj = -1
-        Xa = np.asmatrix([]).reshape(N,0)
         Xa = np.append(Xa, sj*regularXs[:,maxCorrIdx], axis=1)
         XaTXaInv = alg.inv(np.transpose(Xa)*Xa)
         (_,p) = Xa.shape
         Ia = np.matrix([[1] for i in range(p)])
-        Aa = np.power(Ia*XaTXaInv*Ia, -0.5)
+        Aa = np.power(np.transpose(Ia)*XaTXaInv*Ia, -0.5)[0,0]
         Ua = Xa*XaTXaInv*Aa*Ia
         AcSet = AFullSet - ASet
         a = np.transpose(regularXs)*Ua
@@ -81,6 +81,7 @@ def lars(xs, ys):
         UaHat = UaHat+GamaHat*Ua
         (Beta[step],_,_,_) = alg.lstsq(regularXs,UaHat)
         print Beta[step]
+        print regularXs[0]*Beta[step], regularYs[0]
      
 xs, ys = input()
 lars(xs, ys)
