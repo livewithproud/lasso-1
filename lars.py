@@ -83,8 +83,8 @@ def lars(xs, ys):
                 minj = j
         UaHat = UaHat+GamaHat*Ua
         (Beta[step],_,_,_) = alg.lstsq(regularXs,UaHat)
-        print Beta[step]
-        print regularXs[10]*Beta[step], regularYs[10], regularXs[10]
+#        print Beta[step]
+#        print regularXs[10]*Beta[step], regularYs[10], regularXs[10]
     sigmaSqu = np.power(alg.norm(regularYs-regularXs*Beta[P-1]), 2)
     print sigmaSqu
     Cp = [None for i in range(P)]
