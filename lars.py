@@ -30,7 +30,7 @@ def lars(xs, ys):
     regularXs = np.asmatrix(np.divide(np.subtract(xs, meanXs), np.sqrt(N*varXs)))
 #    print np.mean(regularXs, axis=0)
 #    print alg.norm(regularXs, axis=0)
-    print regularXs.shape
+    print regularXs
     meanYs = np.mean(ys)
     varYs = np.var(ys)
     regularYs = np.asmatrix(np.divide(np.subtract(ys, meanYs),1))#np.sqrt(N*varYs)))
