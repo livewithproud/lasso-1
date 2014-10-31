@@ -27,16 +27,17 @@ def lars(xs, ys):
 # Normal        
     meanXs = np.mean(xs, axis=0)
     varXs = np.var(xs, axis=0)
+    print meanXs
+    print varXs
     regularXs = np.asmatrix(np.divide(np.subtract(xs, meanXs), np.sqrt(N*varXs)))
+    print regularXs
 #    print np.mean(regularXs, axis=0)
 #    print alg.norm(regularXs, axis=0)
-    print regularXs
     meanYs = np.mean(ys)
     varYs = np.var(ys)
     regularYs = np.asmatrix(np.divide(np.subtract(ys, meanYs),1))#np.sqrt(N*varYs)))
 #    print np.mean(regularYs, axis=0)
 #    print alg.norm(regularYs, axis=0)
-    print regularYs.shape
     AFullSet = set(range(0,P)) 
     ASet = set([]) 
     AcSet = set(range(0,P))
@@ -48,7 +49,6 @@ def lars(xs, ys):
         corr = np.transpose(regularXs)*(regularYs-UaHat)
         absCorr = np.absolute(corr)
         cHat = max(absCorr)
-    #    print corr
         maxCorrIdx = 0
         maxCorr = -2.0
         for ci in AcSet:

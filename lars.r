@@ -11,7 +11,7 @@ lars <- function() {
     P <- dimXs[2]
     meanXs <- colMeans(Xs)
     varXs <- colVars(Xs)
-    regularXs = (Xs-meanXs)/(sqrt(N*varXs))
+    regularXs <- (Xs-matrix(1, ncol=1, nrow=N)%*%meanXs)/(matrix(1, ncol=1, nrow=N)%*%sqrt((N-1)*varXs))
     meanYs <- colMeans(Ys)
     varYs <- colVars(Ys)
     regularYs <- (Ys-meanYs)/(1.0)
@@ -23,7 +23,7 @@ lars <- function() {
     Xa = matrix(0, N, 0)
     sign = rep(1, P)
     for ( step in 1:P ) {
-        corr = t(Xs)%*%(regularYs-UaHat)
+        corr = t(regularXs)%*%(regularYs-UaHat)
         absCorr = abs(corr)
         cHat = max(absCorr)
         maxCorrIdx = 1 
@@ -34,6 +34,7 @@ lars <- function() {
                 maxCorrIdx = ci
             }
         }
+        cat("add: ", maxCorrIdx, '\n')
         ASet = union(ASet, c(maxCorrIdx))
         if ( corr[maxCorrIdx,] < 0 ) {
             sign[maxCorrIdx] = -1
@@ -61,8 +62,8 @@ lars <- function() {
                 minj = j
             }
         }
-        UaHat = UaHat+GamaHat%*%Ua
-
+        UaHat = UaHat+GamaHat*Ua
+        
     }
 }
 lars()
